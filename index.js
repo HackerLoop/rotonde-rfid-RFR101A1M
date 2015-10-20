@@ -4,11 +4,14 @@ let WebSocket = require('ws');
 
 let ws = new WebSocket('ws://192.168.2.9:4224/');
 
-let actions = [];
-let events = [];
-
 ws.on('open', function open() {
   console.log('opened');
+  ws.send(JSON.stringify({
+  type: 'sub',
+    payload: {
+      identifier: 'SERIAL_PORTMESSAGE',
+    },
+  }));
 });
 
 ws.on('message', function(data, flags) {
@@ -16,11 +19,20 @@ ws.on('message', function(data, flags) {
   if (packet.type == 'def') {
     let definition = packet.payload;
     if (definition.type == 'action') {
-      console.log('received action', definition);
-      actions.push(definition);
-    } else if (definition.type == 'event') {
-      console.log('received event', definition);
-      events.push(definition);
+      if (definition.identifier == 'SERIAL_OPEN') {
+        ws.send(JSON.stringify({
+          type: 'action',
+          payload: {
+            identifier: definition.identifier,
+            data: {
+              port: '/dev/ttyAMA0',
+              baudrate: 9600,
+            },
+          },
+        }));
+      }
     }
+  } else {
+    console.log(packet);
   }
 });
