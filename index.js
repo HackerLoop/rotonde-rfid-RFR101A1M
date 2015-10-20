@@ -4,6 +4,7 @@ let WebSocket = require('ws');
 
 let ws = new WebSocket('ws://192.168.2.9:4224/');
 
+// this is called when the connection is established
 ws.on('open', function open() {
   console.log('opened');
 
@@ -18,6 +19,7 @@ ws.on('open', function open() {
   }));
 });
 
+// this is called when a message is received from rotonde.
 ws.on('message', function(data, flags) {
   // the packets received from rotonde, can be either 'event', 'action', 'def', 'sub' or 'unsub', depending on their type field.
   // the type is associated with a payload field, that contains the data for the packet
