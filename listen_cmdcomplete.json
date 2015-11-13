@@ -1,6 +1,0 @@
-{
-  "type": "sub",
-  "payload": {
-    "identifier":"SERIAL_CMDCOMPLETE"
-  }
-}
